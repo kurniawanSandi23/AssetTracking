@@ -14,7 +14,12 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fungsi Ambil Data (Sama dengan logika kode lamamu)
+  // State untuk Form Tambah Unit
+  const [newTipe, setNewTipe] = useState('I7');
+  const [newTagging, setNewTagging] = useState('');
+  const [newIsLlf, setNewIsLlf] = useState(false);
+
+  // Fungsi Ambil Data
   const fetchLaptops = useCallback(async () => {
     try {
       setError(null);
@@ -33,7 +38,7 @@ function App() {
     }
   }, []);
 
-  // Real-time Subscription (Sama dengan kode lamamu)
+  // Real-time Subscription
   useEffect(() => {
     fetchLaptops();
     const channel = supabase
@@ -50,20 +55,90 @@ function App() {
     setFiltered(q ? laptops.filter(l => l.no_tagging?.toLowerCase().includes(q)) : laptops);
   }, [search, laptops]);
 
+  // Handler Tambah Laptop
+  const handleAddLaptop = async (e) => {
+    e.preventDefault();
+    if (!newTagging) return alert("Harap isi No. Tagging!");
+
+    try {
+      const { error } = await supabase
+        .from('laptops')
+        .insert([{ 
+          tipe: newTipe, 
+          no_tagging: newTagging.toUpperCase(), 
+          is_llf: newIsLlf,
+          is_baru: true 
+        }]);
+
+      if (error) throw error;
+      
+      // Reset Form setelah berhasil
+      setNewTagging('');
+      setNewIsLlf(false);
+    } catch (err) {
+      alert("Gagal menambah data: " + err.message);
+    }
+  };
+
+  // Handler Hapus Laptop
+  const handleDeleteLaptop = async (id) => {
+    if (window.confirm("Apakah Anda yakin ingin menghapus unit ini dari database?")) {
+      try {
+        const { error } = await supabase
+          .from('laptops')
+          .delete()
+          .eq('id', id);
+
+        if (error) throw error;
+      } catch (err) {
+        alert("Gagal menghapus: " + err.message);
+      }
+    }
+  };
+
   return (
     <div className="app-container">
-      {/* HEADER SECTION */}
       <header className="header">
         <div className="header-content">
-          <h1>Laptop Di PT Nexwave</h1>
+          <h1>Laptop Project FO BO</h1>
           <p>Inventory Tracker <span className="live-badge">● LIVE</span></p>
         </div>
       </header>
 
-      {/* ERROR BANNER */}
       {error && <div className="error-banner">⚠️ {error}</div>}
 
       <div className="main-content">
+        
+        {/* SECTION: TAMBAH UNIT BARU */}
+        <div className="admin-actions">
+          <h3>➕ Tambah Unit Baru</h3>
+          <div className="form-row">
+            <select value={newTipe} onChange={(e) => setNewTipe(e.target.value)}>
+              <option value="I7">I7</option>
+              <option value="I5">I5</option>
+            </select>
+            
+            <input 
+              type="text" 
+              placeholder="No. Tagging (Contoh: CE2508)" 
+              value={newTagging}
+              onChange={(e) => setNewTagging(e.target.value)}
+            />
+            
+            <label className="checkbox-group">
+              <input 
+                type="checkbox" 
+                checked={newIsLlf} 
+                onChange={(e) => setNewIsLlf(e.target.checked)} 
+              /> Sudah LLF
+            </label>
+            
+            <button onClick={handleAddLaptop} className="btn-add">
+               Tambah
+            </button>
+          </div>
+        </div>
+
         {/* SUMMARY CARDS */}
         <div className="summary-grid">
           <div className="card">
@@ -101,12 +176,13 @@ function App() {
               <tr>
                 <th>TIPE</th>
                 <th>NO. TAGGING</th>
-                <th style={{textAlign: 'right'}}>STATUS LLF</th>
+                <th>STATUS LLF</th>
+                <th style={{textAlign: 'center'}}>AKSI</th>
               </tr>
             </thead>
             <tbody>
               {loading ? (
-                <tr><td colSpan="3" className="center">Memuat data...</td></tr>
+                <tr><td colSpan="4" className="center">Memuat data...</td></tr>
               ) : filtered.length > 0 ? (
                 filtered.map((item) => (
                   <tr key={item.id} className={!item.is_llf ? 'row-pending' : ''}>
@@ -119,16 +195,25 @@ function App() {
                       {item.no_tagging}
                       {item.is_baru && <span className="baru-pill">BARU</span>}
                     </td>
-                    <td style={{textAlign: 'right'}}>
+                    <td>
                       <div className={`status-pill ${item.is_llf ? 'success' : 'danger'}`}>
                         <span className="dot"></span>
                         {item.is_llf ? 'Sudah LLF' : 'Blm LLF'}
                       </div>
                     </td>
+                    <td style={{textAlign: 'center'}}>
+                      <button 
+                        onClick={() => handleDeleteLaptop(item.id)} 
+                        className="btn-delete"
+                        title="Hapus Unit"
+                      >
+                        🗑️
+                      </button>
+                    </td>
                   </tr>
                 ))
               ) : (
-                <tr><td colSpan="3" className="center">Data tidak ditemukan.</td></tr>
+                <tr><td colSpan="4" className="center">Data tidak ditemukan.</td></tr>
               )}
             </tbody>
           </table>

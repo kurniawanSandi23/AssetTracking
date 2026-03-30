@@ -8,7 +8,12 @@
   --danger: #DC2626;
 }
 
-body { margin: 0; font-family: 'Segoe UI', Roboto, sans-serif; background-color: var(--bg); color: var(--text-main); }
+body { 
+  margin: 0; 
+  font-family: 'Segoe UI', Roboto, sans-serif; 
+  background-color: var(--bg); 
+  color: var(--text-main); 
+}
 
 .header { background: var(--primary); color: white; padding: 40px 20px; text-align: left; }
 .header h1 { margin: 0; font-size: 28px; letter-spacing: -1px; }
@@ -16,31 +21,116 @@ body { margin: 0; font-family: 'Segoe UI', Roboto, sans-serif; background-color:
 
 .main-content { max-width: 900px; margin: -40px auto 40px; padding: 0 20px; }
 
+/* ── ADMIN ACTIONS (Form Tambah) ── */
+.admin-actions {
+  background: white;
+  padding: 20px;
+  border-radius: 16px;
+  margin-bottom: 25px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.admin-actions h3 {
+  margin: 0 0 15px 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.admin-actions input, .admin-actions select {
+  padding: 10px 15px;
+  border: 1px solid #E2E8F0;
+  border-radius: 10px;
+  outline: none;
+  font-size: 14px;
+  background-color: #F8FAFC;
+}
+
+.admin-actions input:focus {
+  border-color: var(--primary);
+  background-color: #fff;
+}
+
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-sec);
+  cursor: pointer;
+}
+
+.btn-add {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.1s, opacity 0.2s;
+}
+
+.btn-add:active { transform: scale(0.95); }
+.btn-add:hover { opacity: 0.9; }
+
+/* ── SUMMARY CARDS ── */
 .summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; }
 .card { background: white; padding: 20px; border-radius: 16px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
 .card h2 { margin: 10px 0 5px; font-size: 28px; }
 .card span { font-size: 10px; color: var(--text-sec); font-weight: bold; letter-spacing: 1px; }
 
-.icon-box { width: 40px; height: 40px; margin: 0 auto; border-radius: 10px; display: flex; alignItems: center; justify-content: center; }
+.icon-box { width: 40px; height: 40px; margin: 0 auto; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
 .blue { background: #EFF6FF; } .green { background: #DCFCE7; } .red { background: #FEE2E2; }
 
+/* ── SEARCH & TABLE ── */
 .search-container { background: white; display: flex; align-items: center; padding: 12px 20px; border-radius: 14px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
 .search-container input { border: none; outline: none; width: 100%; margin-left: 10px; font-size: 16px; }
 
 .laptop-table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
-.laptop-table th { color: var(--text-sec); font-size: 11px; padding: 10px; text-transform: uppercase; }
+.laptop-table th { color: var(--text-sec); font-size: 11px; padding: 10px; text-transform: uppercase; text-align: left; }
 .laptop-table td { background: white; padding: 15px; font-size: 14px; }
 .laptop-table tr td:first-child { border-radius: 12px 0 0 12px; }
 .laptop-table tr td:last-child { border-radius: 0 12px 12px 0; }
 
-.badge { padding: 4px 10px; border-radius: 6px; font-weight: 800; font-size: 12px; }
+.badge { padding: 4px 10px; border-radius: 6px; font-weight: 800; font-size: 11px; }
 .badge.i7 { background: #EFF6FF; color: #1D4ED8; }
 .badge.i5 { background: #F5F3FF; color: #6D28D9; }
 
-.status-pill { display: inline-flex; align-items: center; padding: 5px 12px; border-radius: 20px; font-weight: bold; font-size: 12px; gap: 6px; }
+.status-pill { display: inline-flex; align-items: center; padding: 5px 12px; border-radius: 20px; font-weight: bold; font-size: 11px; gap: 6px; }
 .status-pill.success { background: #DCFCE7; color: var(--success); }
 .status-pill.danger { background: #FEE2E2; color: var(--danger); }
 .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
 
+.btn-delete {
+  background: #FFF1F2;
+  color: var(--danger);
+  border: none;
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.2s;
+}
+
+.btn-delete:hover { background: var(--danger); color: white; }
+
 .baru-pill { background: #FEF3C7; color: #D97706; font-size: 9px; padding: 2px 6px; border-radius: 4px; margin-left: 8px; font-weight: 800; }
-.row-pending td { background: #fffafb; } /* Highlight tipis untuk yang belum LLF */
+.row-pending td { background: #fffafb; }
+
+.center { text-align: center; color: var(--text-sec); padding: 20px; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 600px) {
+  .summary-grid { grid-template-columns: 1fr; }
+  .form-row { flex-direction: column; align-items: stretch; }
+  .header h1 { font-size: 22px; }
+}
