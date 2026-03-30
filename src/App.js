@@ -71,8 +71,6 @@ function App() {
         }]);
 
       if (error) throw error;
-      
-      // Reset Form setelah berhasil
       setNewTagging('');
       setNewIsLlf(false);
     } catch (err) {
@@ -82,13 +80,9 @@ function App() {
 
   // Handler Hapus Laptop
   const handleDeleteLaptop = async (id) => {
-    if (window.confirm("Apakah Anda yakin ingin menghapus unit ini dari database?")) {
+    if (window.confirm("Apakah Anda yakin ingin menghapus unit ini?")) {
       try {
-        const { error } = await supabase
-          .from('laptops')
-          .delete()
-          .eq('id', id);
-
+        const { error } = await supabase.from('laptops').delete().eq('id', id);
         if (error) throw error;
       } catch (err) {
         alert("Gagal menghapus: " + err.message);
@@ -98,10 +92,14 @@ function App() {
 
   return (
     <div className="app-container">
+      {/* HEADER SECTION (CENTERED) */}
       <header className="header">
         <div className="header-content">
-          <h1>Laptop Project FO BO</h1>
-          <p>Inventory Tracker <span className="live-badge">● LIVE</span></p>
+          <h1 className="main-title">Laptop Project FO BO</h1>
+          <div className="badge-container">
+            <span className="sub-title">Inventory Tracker</span>
+            <span className="live-badge">● LIVE</span>
+          </div>
         </div>
       </header>
 
@@ -109,7 +107,7 @@ function App() {
 
       <div className="main-content">
         
-        {/* SECTION: TAMBAH UNIT BARU */}
+        {/* SECTION: TAMBAH UNIT */}
         <div className="admin-actions">
           <h3>➕ Tambah Unit Baru</h3>
           <div className="form-row">
@@ -120,7 +118,7 @@ function App() {
             
             <input 
               type="text" 
-              placeholder="No. Tagging (Contoh: CE2508)" 
+              placeholder="No. Tagging (e.g. CE2508)" 
               value={newTagging}
               onChange={(e) => setNewTagging(e.target.value)}
             />
@@ -133,9 +131,7 @@ function App() {
               /> Sudah LLF
             </label>
             
-            <button onClick={handleAddLaptop} className="btn-add">
-               Tambah
-            </button>
+            <button onClick={handleAddLaptop} className="btn-add">Tambah</button>
           </div>
         </div>
 
@@ -163,7 +159,7 @@ function App() {
           <span className="search-icon">🔎</span>
           <input 
             type="text" 
-            placeholder="Cari No. Tagging (Contoh: CE2508)..." 
+            placeholder="Cari No. Tagging..." 
             value={search}
             onChange={(e) => setSearch(e.target.value.toUpperCase())}
           />
@@ -202,11 +198,7 @@ function App() {
                       </div>
                     </td>
                     <td style={{textAlign: 'center'}}>
-                      <button 
-                        onClick={() => handleDeleteLaptop(item.id)} 
-                        className="btn-delete"
-                        title="Hapus Unit"
-                      >
+                      <button onClick={() => handleDeleteLaptop(item.id)} className="btn-delete">
                         🗑️
                       </button>
                     </td>
@@ -219,6 +211,13 @@ function App() {
           </table>
         </div>
       </div>
+
+      {/* FOOTER SECTION */}
+      <footer className="footer">
+        <p>Website Tracking by <strong>@kurniawan sandi</strong></p>
+        <p>Email: <a href="mailto:Kurniawan.sandi.tik22@mhsw.pnj.ac.id">Kurniawan.sandi.tik22@mhsw.pnj.ac.id</a></p>
+        <p>Contact: <a href="https://wa.me/6289518573420" target="_blank" rel="noreferrer">+62 895-1857-3420</a></p>
+      </footer>
     </div>
   );
 }
